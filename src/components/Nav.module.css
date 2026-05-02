@@ -11,6 +11,10 @@
   align-items: center;
   pointer-events: none;
   mix-blend-mode: difference;
+  /* Match info + project pages: full-viewport 12-col width (not --grid-max-width). */
+  --nav-col-width: calc(
+    (100vw - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
+  );
 }
 
 .nav > * {
@@ -19,15 +23,10 @@
 
 .siteTitle {
   position: absolute;
-  /* Right-aligned to the right edge of column 5.
-     Anchored to 50vw so it stays correct when the grid is centred
-     (viewport > 1440px), mirroring the `.centerLinks` approach.
-     Right edge of col 5 = 50vw − 1·colW − 1.5·gutter,
-     where colW = (gridW − 2·margin − 11·gutter) / 12. */
+  /* Right edge aligns with the info portrait: cols 3–5 plus `.portraitAnchor`’s
+     extra gutter (= start of column 6). Same --nav-col-width as `.layout` on /info. */
   left: calc(
-    50vw
-    - (min(100vw, var(--grid-max-width)) - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
-    - 1.5 * var(--grid-gutter)
+    var(--grid-margin) + 5 * var(--nav-col-width) + 5 * var(--grid-gutter)
   );
   transform: translateX(-100%);
   white-space: nowrap;
