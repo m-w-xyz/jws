@@ -29,6 +29,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Local media (uploaded assets live in Sanity)
+assets/
+
 # Sanity
 .sanity/
 
