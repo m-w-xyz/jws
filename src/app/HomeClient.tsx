@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import HomeSection from "@/components/HomeSection";
 import MobileHomeCenterLabels from "@/components/MobileHomeCenterLabels";
 import homepageStyles from "./HomeClient.module.css";
@@ -41,6 +41,10 @@ export default function HomeClient({
   const setSectionRef = (index: number) => (el: HTMLElement | null) => {
     sectionRefs.current[index] = el;
   };
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <main>
