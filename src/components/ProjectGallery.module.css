@@ -1,0 +1,269 @@
+.gallery {
+  position: relative;
+  width: 100%;
+  /* Intentionally NOT `height: 100%`. .galleryCol sits in a CSS grid row
+     that auto-sizes to the taller of the two columns; if .infoCol grows
+     past 100vh, height: 100% would stretch .gallery (and therefore the
+     thumbnails anchored to its bottom) below the image. Letting .gallery
+     size to its child .mainImage (100vh) keeps the thumbnail strip glued
+     to the bottom of the image. */
+}
+
+.mainImage {
+  position: relative;
+  /* The right edge stays at .galleryCol's natural right edge (right edge
+     of column 6). The left edge is extended leftward to the actual page
+     edge by negating .page's horizontal padding. Since .page now spans
+     the full viewport (no max-width), the bleed needed to reach the
+     viewport edge is always exactly --grid-margin. */
+  margin-left: calc(-1 * var(--grid-margin));
+  width: calc(100% + var(--grid-margin));
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mainImage img.slideImage {
+  position: absolute;
+  inset: 0;
+}
+
+.mainImage img.slideImage,
+.slideLayer {
+  /* All slides are stacked; opacity toggled for cross-fade —
+     mirrors the original image behaviour, including vs video. */
+  transition: opacity 500ms var(--ease-figma);
+}
+
+.slideLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.slideLayerVideoContain {
+  background-color: var(--gallery-video-fit-bg, var(--color-bg));
+}
+
+.slideImage {
+  /* Always fills the .mainImage block edge-to-edge, cropping whichever
+     axis doesn't match the container's aspect ratio. */
+  object-fit: cover;
+}
+
+.transitionGate {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  object-fit: cover;
+}
+
+/* 16∶9-ish embed scaled to cover the gallery frame (similar to object-fit cover). */
+.embedSizer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.embedCover {
+  position: absolute;
+  border: none;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw;
+  min-height: 100%;
+  min-width: 177.777777vh;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Letterboxed 16∶9 embed (matches YouTube / Vimeo player aspect). */
+.embedSizerContain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background-color: var(--gallery-video-fit-bg, var(--color-bg));
+}
+
+.embedCoverContain {
+  position: relative;
+  border: none;
+  top: auto;
+  left: auto;
+  transform: none;
+  width: min(100cqw, calc(100cqh * 16 / 9));
+  height: min(100cqh, calc(100cqw * 9 / 16));
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.nativeVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.nativeVideoFit {
+  object-fit: contain;
+}
+
+.thumb .videoThumbSolid {
+  position: absolute;
+  inset: 0;
+}
+
+.videoThumbSolid {
+  background: #2a2a2a;
+}
+
+/* ----- Click-to-navigate halves -----
+   Two transparent buttons stacked over the main image — left half goes
+   to the previous image, right half to the next (both wrap around). The
+   custom cursors are inline SVG chevrons (white outline + black fill so
+   they're visible on any image), pointing left or right to telegraph
+   the navigation direction. The hot spot (12 12) is the centre of the
+   24×24 cursor; standard `w-resize` / `e-resize` are listed as
+   fallbacks in case a browser refuses the SVG. */
+.prevHalf,
+.nextHalf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  border: none;
+  background: none;
+  padding: 0;
+  /* Sits above the underlying <img> so it receives the click. The image
+     has no explicit z-index, so any positive value here is enough. */
+  z-index: 1;
+}
+
+.prevHalf {
+  left: 0;
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15 6 L9 12 L15 18' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M15 6 L9 12 L15 18' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      12 12,
+    w-resize;
+}
+
+.nextHalf {
+  right: 0;
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M9 6 L15 12 L9 18' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M9 6 L15 12 L9 18' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      12 12,
+    e-resize;
+}
+
+.videoFitButton {
+  position: absolute;
+  right: max(calc(var(--grid-margin) + 8px), 12px);
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  pointer-events: auto;
+}
+
+.thumbnails {
+  /* Anchored to .gallery (position: relative), so the thumb strip scrolls
+     with the page rather than staying pinned to the viewport. .gallery
+     spans cols 1-6, so `left: calc(100% + var(--grid-gutter))` lands the
+     stack one gutter past the right edge of col 6 — i.e. exactly on the
+     left edge of col 7, lining up under the "Works" link in the nav.
+     `bottom: 10px` keeps it 10px above the bottom of the 100vh main
+     image. */
+  position: absolute;
+  left: calc(100% + var(--grid-gutter));
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Above the gallery image but below the nav (400) and overlays. */
+  z-index: 100;
+}
+
+.thumb {
+  /* Half a grid column wide (and square). --col-width is defined on
+     .page in works/[slug]/page.module.css and inherited down the DOM. */
+  width: calc(var(--col-width) / 2);
+  height: calc(var(--col-width) / 2);
+  position: relative;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.thumb.active,
+.thumb:hover {
+  opacity: 1;
+}
+
+.thumb img {
+  object-fit: cover;
+}
+
+@media (max-width: 1023px) {
+  .mainImage {
+    height: 60vh;
+    /* Edge-to-edge below the desktop breakpoint — the image bleeds equally
+       on both sides instead of asymmetrically (the desktop layout only
+       extends to the left because the right edge intentionally stops at
+       column 6, which doesn't apply once .galleryCol is full-width). */
+    margin-left: calc(-1 * var(--grid-margin));
+    width: calc(100% + 2 * var(--grid-margin));
+  }
+
+  /* Below the desktop breakpoint the gallery sits in a single-column flow,
+     so the thumbnails come back into the document as a horizontal strip
+     under the main image. */
+  .thumbnails {
+    position: static;
+    left: auto;
+    bottom: auto;
+    flex-direction: row;
+    margin-top: 10px;
+  }
+
+  .thumb {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 767px) {
+  /*
+   * Match mobile homepage `.primaryImage`: full bleed width × 4:5
+   * (see HomeSection.module.css).
+   */
+  .mainImage {
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .thumb {
+    width: 48px;
+    height: 48px;
+  }
+}

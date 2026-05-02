@@ -1,0 +1,153 @@
+.splash {
+  position: fixed;
+  inset: 0;
+  /* Above nav (400), below Inquiries (500) and page-transition overlay (1000). */
+  z-index: 450;
+  overflow: hidden;
+  will-change: transform;
+  /* Transform is animated imperatively via the Web Animations API in
+     SplashIntro.tsx (both slide-in and slide-up). Keeping this to CSS
+     transitions caused the slide-up to be blocked by the entrance
+     animation's lingering `fill: forwards` state. */
+}
+
+/* The text row is a sibling of the splash panel (not a child), so it
+   stays fixed to the viewport and doesn't get swept up when the panel
+   slides off-screen. Sits one layer above the splash panel. */
+.textRow {
+  position: fixed;
+  inset: 0;
+  z-index: 451;
+  pointer-events: none;
+}
+
+/* Shared text styling. Positions are anchored to 50vw to stay consistent
+   with the Nav, which means they track the centred grid at viewports
+   wider than 1440px. */
+.title,
+.tagline {
+  position: absolute;
+  top: 50vh;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  color: #000000;
+  mix-blend-mode: normal;
+  white-space: nowrap;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    opacity 600ms var(--ease-figma),
+    transform 600ms var(--ease-figma);
+}
+
+/* Huddle position (stage 1, pre-animation + fade destination).
+   - Title right-aligned to the right edge of column 6 (= 50vw - gutter/2)
+   - Tagline left-aligned to the left edge of column 7 (= 50vw + gutter/2,
+     same as "Work" in the Nav). */
+.title {
+  left: calc(50vw - var(--grid-gutter) / 2);
+  transform: translate(-100%, calc(-50% + 10px));
+}
+
+.tagline {
+  left: calc(50vw + var(--grid-gutter) / 2);
+  transform: translate(0, calc(-50% + 10px));
+}
+
+/* Stage 2: fade in + settle 10px upward to the huddle position. */
+.entered .title,
+.entered .tagline {
+  opacity: 1;
+}
+
+.entered .title {
+  transform: translate(-100%, -50%);
+}
+
+.entered .tagline {
+  transform: translate(0, -50%);
+}
+
+/* Stage 3: exit. Mirror the entrance — fade out while rising 10px upward.
+   Happens in parallel with the splash panel slide-up. */
+.fadingOut .title {
+  opacity: 0;
+  transform: translate(-100%, calc(-50% - 10px));
+}
+
+.fadingOut .tagline {
+  opacity: 0;
+  transform: translate(0, calc(-50% - 10px));
+}
+
+/* ----- Word swap ("curiosity" → "intrigue" → "desire" → "curiosity") ----- */
+
+/* Stack all possible words in the same grid cell so width hugs the widest
+   word and there's zero layout shift between swaps. */
+.wordSwap {
+  display: inline-grid;
+  grid-template-areas: "stack";
+  vertical-align: baseline;
+}
+
+.word {
+  grid-area: stack;
+  white-space: nowrap;
+  transition:
+    opacity 220ms var(--ease-figma),
+    transform 220ms var(--ease-figma);
+  will-change: opacity, transform;
+}
+
+/* Pre: below the baseline, hidden — waiting to rise into view. */
+.word[data-state="pre"] {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* Active: the currently visible word. */
+.word[data-state="active"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Post: it has already taken its turn — drifts up + out of view. */
+.word[data-state="post"] {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Mobile / tablet fallback — centre the two labels in a single row.
+   Still fade + move-up on enter; no horizontal spread. */
+@media (max-width: 1023px) {
+  .textRow {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    inset: auto;
+    top: 50vh;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+  }
+
+  .title,
+  .tagline {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: translateY(10px);
+  }
+
+  .entered .title,
+  .entered .tagline {
+    transform: translateY(0);
+  }
+
+  .fadingOut .title,
+  .fadingOut .tagline {
+    transform: translateY(-10px);
+  }
+}

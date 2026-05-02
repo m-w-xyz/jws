@@ -1,0 +1,84 @@
+/**
+ * Homepage mobile (≤767px): same compositing pattern as `Nav` — `mix-blend-mode:
+ * difference` on the fixed full-viewport layer, white (#FFFFFF) text, no blend on
+ * transformed inner wrappers. `pointer-events: none` so taps reach the hero link.
+ */
+
+.strip {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 350;
+  pointer-events: none;
+  background: transparent;
+}
+
+@media (max-width: 767px) {
+  .strip {
+    display: block;
+    mix-blend-mode: difference;
+  }
+}
+
+.inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50vh;
+  width: 100%;
+  box-sizing: border-box;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.blendWrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: max(10px, env(safe-area-inset-left, 0px));
+  padding-right: max(10px, env(safe-area-inset-right, 0px));
+  gap: clamp(16px, 4vw, 32px);
+  pointer-events: none;
+}
+
+.number,
+.title {
+  font-family: var(--font-special-gothic), sans-serif;
+  font-size: var(--font-size);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing);
+  line-height: var(--line-height);
+  color: #ffffff;
+  opacity: 1;
+  transition:
+    opacity 0.42s var(--ease-figma),
+    transform 0.42s var(--ease-figma);
+}
+
+.dimmed {
+  opacity: 0;
+}
+
+.number {
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.title {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .number,
+  .title {
+    transition: none;
+  }
+}

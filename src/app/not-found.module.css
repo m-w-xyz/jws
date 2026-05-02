@@ -1,0 +1,183 @@
+.page {
+  min-height: 100vh;
+  position: relative;
+  background-color: var(--color-bg);
+  transition: background-color 0.3s ease;
+}
+
+/* Explicit size: children are position:absolute only, so box would collapse otherwise */
+.numbers {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 480px;
+  height: 480px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.dragWrap {
+  position: absolute;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.dragWrap:active {
+  cursor: grabbing;
+}
+
+.four1Wrap {
+  left: 0;
+  bottom: 240px;
+}
+
+.four2Wrap {
+  left: 308px;
+  bottom: 240px;
+}
+
+.zeroWrap {
+  left: 186px;
+  bottom: 0;
+}
+
+.four1,
+.four2,
+.zero {
+  font-size: 300px;
+  font-weight: 500;
+  line-height: 0.8;
+  color: var(--color-text);
+  mix-blend-mode: normal;
+  display: block;
+}
+
+.textRow {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  top: calc(50vh + 240px + max(16px, 2.5vh));
+  bottom: auto;
+  /* No transform here — transform would break position:fixed children (viewport coords). */
+  display: flex;
+  gap: clamp(40px, 10vw, 162px);
+  align-items: baseline;
+  justify-content: center;
+  z-index: 2;
+  mix-blend-mode: normal;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.textRow .goBack {
+  pointer-events: auto;
+}
+
+/* Override .jw-site button (white + difference) — must beat globals specificity */
+.page .goBack {
+  white-space: nowrap;
+  color: #000000 !important;
+  mix-blend-mode: normal !important;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+  opacity: 1 !important;
+}
+
+.page .goBack:hover,
+.page .goBack:focus-visible {
+  opacity: 1 !important;
+}
+
+.page .goBackFloating {
+  z-index: 200;
+}
+
+/* Position / motion / opacity driven inline in NotFoundClient */
+.eyesViewport {
+  position: fixed;
+  z-index: 450;
+  width: min(16vw, 84px);
+  max-width: 84px;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  transform-origin: center center;
+}
+
+.eyesViewport img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1) !important;
+}
+
+@media (max-width: 1023px) {
+  .numbers {
+    width: 340px;
+    height: 340px;
+  }
+
+  .four1,
+  .four2,
+  .zero {
+    font-size: 200px;
+  }
+
+  .four2Wrap {
+    left: 206px;
+    bottom: 160px;
+  }
+
+  .four1Wrap {
+    bottom: 160px;
+  }
+
+  .zeroWrap {
+    left: 120px;
+  }
+  .textRow {
+    top: calc(50vh + 170px + max(14px, 2vh));
+  }
+}
+
+@media (max-width: 767px) {
+  .numbers {
+    width: 220px;
+    height: 280px;
+  }
+
+  .four1,
+  .four2,
+  .zero {
+    font-size: 120px;
+  }
+
+  .four1Wrap {
+    bottom: 100px;
+    left: 0;
+  }
+
+  .four2Wrap {
+    left: 124px;
+    bottom: 100px;
+  }
+
+  .zeroWrap {
+    left: 72px;
+    bottom: 0;
+  }
+
+  .textRow {
+    top: calc(50vh + 140px + max(12px, 2vh));
+    max-width: none;
+    padding: 0 var(--grid-margin);
+    text-align: center;
+  }
+}

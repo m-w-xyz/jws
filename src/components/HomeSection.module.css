@@ -1,0 +1,180 @@
+.section {
+  height: 100vh;
+  position: relative;
+}
+
+/* ---- Primary image (always visible, half viewport) ----
+   This is now also the click + hover target. */
+.primaryImage {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Half viewport each side; left and right primaries meet at 50vw. */
+  width: 50vw;
+  overflow: hidden;
+  display: block;
+  cursor: pointer;
+}
+
+.primaryImage.static {
+  cursor: default;
+}
+
+.primaryImage img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fills the primary slot (`Image` uses `fill` here). */
+.primaryImageStack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  background-color: #e0ddd8;
+}
+
+.primaryLeft {
+  left: 0;
+}
+
+.primaryRight {
+  right: 0;
+}
+
+/* ---- Secondary image (2 cols wide, 4:5 ratio) ---- */
+.secondaryImage {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(
+    (min(100vw, var(--grid-max-width)) - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12 * 2
+    + var(--grid-gutter)
+  );
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-figma);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.secondaryImage img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.secondaryRight {
+  right: var(--grid-margin);
+}
+
+.secondaryLeft {
+  left: var(--grid-margin);
+}
+
+.secondaryImage.visible {
+  opacity: 1;
+}
+
+/* Desktop: hover-revealed number + title (blend via `data-home-project-caption` in globals.css). */
+.hoverNumber,
+.hoverTitle {
+  position: fixed;
+  top: 50%;
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+  z-index: 10;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  transition: opacity 0.5s var(--ease-figma);
+}
+
+.hoverNumber {
+  /* Right-aligned to the left edge of column 5.
+     Anchored to 50vw so it stays correct when the grid is centred
+     (viewport > 1440px), matching the .hoverTitle approach. */
+  left: calc(
+    50vw
+    - 2 * (min(100vw, var(--grid-max-width)) - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
+    - 1.5 * var(--grid-gutter)
+  );
+  transform: translate(-100%, -50%);
+}
+
+.hoverTitle {
+  /* Left edge of column 7 = horizontal centre + half a gutter */
+  left: calc(50vw + var(--grid-gutter) / 2);
+  transform: translateY(-50%);
+}
+
+.hoverNumber.visible,
+.hoverTitle.visible {
+  opacity: 1;
+}
+
+/* Scroll-linked project copy at 50vh (DesktopHomeCenterLabels); hover duplicates removed. */
+@media (min-width: 1024px) {
+  .hoverNumber,
+  .hoverTitle {
+    display: none;
+  }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1023px) {
+  .section {
+    height: auto;
+    min-height: 70vh;
+  }
+
+  .link {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .primaryImage {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+  }
+
+  .secondaryImage {
+    display: none;
+  }
+
+  .hoverNumber,
+  .hoverTitle {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  /*
+   * Mobile homepage: portrait-style primary image, full bleed width × 4:5.
+   * (Overrides the 1023px 60vh height for compact viewports.)
+   */
+  .primaryImage {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  /*
+   * Homepage: vertically centre the first project image against the viewport.
+   */
+  .section:first-of-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100dvh;
+  }
+}

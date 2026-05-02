@@ -1,0 +1,89 @@
+.footer {
+  position: relative;
+  z-index: 100;
+  padding: 9px var(--grid-margin);
+  display: flex;
+  align-items: center;
+  height: 28px;
+  margin-top: 80px;
+  mix-blend-mode: difference;
+}
+
+.themeToggle {
+  position: absolute;
+  left: var(--grid-margin);
+  white-space: nowrap;
+}
+
+.email {
+  position: absolute;
+  /* Right-aligned to the right edge of column 5, mirroring Nav .siteTitle.
+     Anchored to 50vw so it stays correct when the grid is centred
+     (viewport > 1440px).
+     Right edge of col 5 = 50vw − 1·colW − 1.5·gutter,
+     where colW = (gridW − 2·margin − 11·gutter) / 12. */
+  left: calc(
+    50vw
+    - (min(100vw, var(--grid-max-width)) - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
+    - 1.5 * var(--grid-gutter)
+  );
+  transform: translateX(-100%);
+}
+
+.centerLinks {
+  position: absolute;
+  /* Left edge of column 7, mirroring Nav .centerLinks. */
+  left: calc(50vw + var(--grid-gutter) / 2);
+  display: flex;
+  gap: 14px;
+}
+
+.location {
+  position: absolute;
+  right: var(--grid-margin);
+  white-space: nowrap;
+}
+
+/* Desktop: Melbourne on the right. ≤1023px layout: Instagram in that slot (center column hidden). */
+.locationDesktop {
+  display: inline;
+}
+
+.instagramMobile {
+  display: none;
+  text-decoration: none;
+}
+
+.link {
+  font-size: var(--font-size);
+  color: #fff;
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .locationDesktop {
+    display: none;
+  }
+
+  .instagramMobile {
+    display: inline;
+  }
+
+  .email,
+  .centerLinks {
+    display: none;
+  }
+
+  .themeToggle {
+    position: static;
+  }
+
+  .location {
+    position: static;
+    margin-left: auto;
+  }
+
+  .footer {
+    justify-content: space-between;
+  }
+}

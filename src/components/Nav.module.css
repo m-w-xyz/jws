@@ -1,0 +1,150 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Below splash (450–451), page transitions (1000), MobileInfo overlays (500/530).
+     Homepage mobile captions strip ~350. */
+  z-index: 400;
+  padding: 10px var(--grid-margin);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+.nav > * {
+  pointer-events: auto;
+}
+
+.siteTitle {
+  position: absolute;
+  /* Right-aligned to the right edge of column 5.
+     Anchored to 50vw so it stays correct when the grid is centred
+     (viewport > 1440px), mirroring the `.centerLinks` approach.
+     Right edge of col 5 = 50vw − 1·colW − 1.5·gutter,
+     where colW = (gridW − 2·margin − 11·gutter) / 12. */
+  left: calc(
+    50vw
+    - (min(100vw, var(--grid-max-width)) - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
+    - 1.5 * var(--grid-gutter)
+  );
+  transform: translateX(-100%);
+  white-space: nowrap;
+}
+
+.centerLinks {
+  position: absolute;
+  /* Left edge of column 7 = horizontal centre + half a gutter.
+     Works regardless of whether the grid is centred (viewport > 1440px). */
+  left: calc(50vw + var(--grid-gutter) / 2);
+  display: flex;
+  gap: 19px;
+}
+
+.inquiriesBtn {
+  position: absolute;
+  right: var(--grid-margin);
+  white-space: nowrap;
+}
+
+.link {
+  font-size: var(--font-size);
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* Mobile (≤767px): Info control opens full-screen info card (see MobileInfoPanel). */
+.infoTap {
+  display: none;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: auto;
+  min-height: 44px;
+  padding: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: var(--font-size);
+  font-family: var(--font-special-gothic), sans-serif;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing);
+  line-height: var(--line-height);
+  color: #ffffff;
+  mix-blend-mode: difference;
+  transition: opacity 0.4s var(--ease-figma);
+}
+
+.infoTap:hover {
+  opacity: 0.4;
+}
+
+/* Solid ink over dimmed backdrop while the card is open */
+.infoTapOpen {
+  mix-blend-mode: normal !important;
+  color: #000000 !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 1023px) {
+  .siteTitle {
+    position: static;
+    transform: none;
+  }
+
+  .centerLinks {
+    position: static;
+    margin-left: auto;
+  }
+
+  .inquiriesBtn {
+    position: static;
+    margin-left: auto;
+  }
+
+  .nav {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 767px) {
+  .nav {
+    padding-top: calc(10px + env(safe-area-inset-top, 0px));
+    padding-right: max(10px, env(safe-area-inset-right, 0px));
+    padding-bottom: 10px;
+    padding-left: max(10px, env(safe-area-inset-left, 0px));
+    align-items: flex-start;
+    height: auto;
+    min-height: 0;
+  }
+
+  .nav .link,
+  .nav .siteTitle {
+    font-family: var(--font-special-gothic), sans-serif;
+    font-weight: 500;
+  }
+
+  .centerLinks {
+    display: none;
+  }
+
+  .inquiriesBtn {
+    display: none;
+  }
+
+  .infoTap {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    /* Align cap height / first line with the site title (same stack as `.nav`). */
+    top: calc(10px + env(safe-area-inset-top, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    /* Under splash (450–451); page curtain (1000). Above captions (~350). Mobile Info backdrops (500/530). */
+    z-index: 390;
+    margin: 0;
+    padding: 0;
+    min-height: unset;
+    box-sizing: border-box;
+  }
+}

@@ -1,0 +1,113 @@
+/* Full-viewport layer for Matter-driven clones (below site nav z-index 400). */
+.physicsLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  pointer-events: auto;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.physicsLayerDragging {
+  cursor: grabbing;
+}
+
+/* Hide in-flow originals while physics mirrors are shown */
+.ghostOriginals :global([data-gravity-word]),
+.ghostOriginals :global([data-physics-portrait]) {
+  visibility: hidden !important;
+}
+
+.fixOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 380;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  isolation: isolate;
+  mix-blend-mode: normal;
+}
+
+.fixButton {
+  pointer-events: auto;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: var(--font-size, 14px);
+  line-height: 1;
+  color: #000000;
+  -webkit-text-fill-color: currentColor;
+  /* Normal = no blending; CSS does not define `mix-blend-mode: none`. */
+  mix-blend-mode: normal;
+  isolation: isolate;
+  text-decoration: none;
+}
+
+.fixButton:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Overrides `.jw-site :where(button)` + button:hover in globals (higher specificity, module-local). */
+:global(.jw-site) .fixOverlay {
+  isolation: isolate;
+  mix-blend-mode: normal;
+  color: #000000;
+}
+
+:global(.jw-site) button.fixButton {
+  color: #000000 !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Match `.jw-site button:hover { opacity: 0.4 }`; no underline. */
+:global(.jw-site) button.fixButton:hover {
+  color: #000000 !important;
+  mix-blend-mode: normal !important;
+  opacity: 0.4 !important;
+}
+
+/* Post-fix line (not a `<p>` — avoids site-wide difference copy rules). */
+.fixRetortText {
+  pointer-events: none;
+  margin: 0;
+  font: inherit;
+  font-size: var(--font-size, 14px);
+  line-height: 1;
+  color: #000000;
+  mix-blend-mode: normal;
+  isolation: isolate;
+  opacity: 1;
+  transition: opacity var(--fix-retort-fade-ms, 5.2s) ease;
+}
+
+.fixRetortFade {
+  opacity: 0;
+}
+
+:global(.jw-site) .fixOverlay .fixRetortText {
+  color: #000000 !important;
+  mix-blend-mode: normal !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .physicsLayer {
+    display: none !important;
+  }
+
+  .fixOverlay {
+    display: none !important;
+  }
+
+  /* Retort skips the long crawl when reduced-motion is preferred. */
+  .fixRetortText {
+    transition-duration: 0.01ms;
+  }
+}

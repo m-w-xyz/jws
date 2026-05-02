@@ -1,0 +1,18 @@
+/**
+ * Wraps homepage hero sections only (not the mobile caption strip).
+ * Desktop: `display: contents` — sections stay direct children of `<main>` (no layout box).
+ * Mobile: `isolation: isolate` groups section bitmaps; captions are a sibling for nav-style blending.
+ */
+
+.mobileViewportGroup {
+  display: contents;
+}
+
+@media (max-width: 767px) {
+  .mobileViewportGroup {
+    display: block;
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+  }
+}

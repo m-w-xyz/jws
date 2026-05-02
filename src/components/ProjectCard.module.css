@@ -1,0 +1,64 @@
+.card {
+  display: block;
+  cursor: pointer;
+}
+
+.card.static {
+  cursor: default;
+}
+
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 348 / 466;
+  overflow: hidden;
+}
+
+.imageWrap img {
+  object-fit: cover;
+}
+
+.featuredImage,
+.hoverImage {
+  transition: opacity 0.4s var(--ease-figma);
+}
+
+.hoverImage {
+  opacity: 0;
+}
+
+.hoverImage.visible {
+  opacity: 1;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e0ddd8;
+}
+
+/* Match the nav: blend the whole meta row at once (single difference
+   stacking context) so the text looks identical to the nav text. */
+.meta {
+  display: flex;
+  align-items: baseline;
+  margin-top: 10px;
+  line-height: 1;
+  font-size: var(--font-size);
+  color: #fff;
+  mix-blend-mode: difference;
+  transition: opacity 0.4s var(--ease-figma);
+}
+
+.meta.faded {
+  opacity: 0.4;
+}
+
+.number {
+  flex-shrink: 0;
+  width: 118.7px;
+}
+
+.title {
+  font-size: inherit;
+}

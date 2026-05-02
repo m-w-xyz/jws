@@ -1,0 +1,283 @@
+/* ============================================
+   CSS Custom Properties & Theme
+   ============================================ */
+
+:root {
+  /* Grid */
+  --grid-columns: 12;
+  --grid-gutter: 10px;
+  --grid-margin: 10px;
+  --grid-max-width: 1440px;
+
+  /* Typography */
+  --font-size: 14px;
+  --letter-spacing: -0.01em;
+  --line-height: normal;
+  --text-indent: calc((100% - var(--grid-gutter) * 11) / 12 + var(--grid-gutter));
+
+  /* Light theme (default) */
+  --color-bg: #f2f0ed;
+  --color-text: #000000;
+  --color-accent: #8f392b;
+  --color-text-inverse: #ffffff;
+
+  /* Motion — single curve for everything */
+  --ease-figma: cubic-bezier(0.58, 0.08, 0.13, 1);
+  /* Page curtain + Inquiries / mobile Info sidecars (horizontal slide + backdrop) */
+  --page-transition-duration: 1s;
+
+  /* Transitions */
+  --transition-theme: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] {
+  --color-bg: #1a1a1a;
+  --color-text: #f2f0ed;
+  --color-accent: #8f392b;
+  --color-text-inverse: #000000;
+}
+
+@media (max-width: 767px) {
+  html {
+    /* Tighter rhythm than desktop `normal` (~1.2–1.4 in browsers). */
+    --line-height: 1.22;
+  }
+}
+
+/* ============================================
+   Reset & Base
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--font-size);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Discourage drag-to-desktop / selection on photos (with ImageContextMenuBlock). */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* One size for UI copy and section headings (exhibitions, etc.) */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 1em;
+  font-weight: inherit;
+}
+
+body {
+  font-family: var(--font-special-gothic), sans-serif;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  transition: var(--transition-theme);
+}
+
+.jw-site {
+  min-height: 100vh;
+}
+
+.jw-site ::selection {
+  /* Selection paints as normal layers so highlight hex isn't run through parent
+     mix-blend-mode: difference on body copy/links. */
+  mix-blend-mode: normal;
+  background-color: var(
+    --selection-highlight,
+    var(--splash-transition-colour, var(--color-accent))
+  );
+}
+
+.jw-site ::-moz-selection {
+  mix-blend-mode: normal;
+  background-color: var(
+    --selection-highlight,
+    var(--splash-transition-colour, var(--color-accent))
+  );
+}
+
+/* Site chrome only: difference-blended text (Sanity Studio at /studio is unscoped) */
+.jw-site :where(
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  li,
+  label,
+  figcaption,
+  cite,
+  td,
+  th,
+  blockquote,
+  small,
+  strong,
+  em
+) {
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.jw-site :where(button):not(:has(img)) {
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.jw-site :where(a):not(:has(img)) {
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.jw-site :where(a):has(img) {
+  mix-blend-mode: normal;
+}
+
+.jw-site a:not(:has(img)),
+.jw-site button {
+  transition: opacity 0.4s var(--ease-figma);
+}
+
+.jw-site a:not(:has(img)):hover,
+.jw-site button:hover {
+  opacity: 0.4;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ============================================
+   12-Column Grid
+   ============================================ */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  gap: var(--grid-gutter);
+  max-width: var(--grid-max-width);
+  padding-left: var(--grid-margin);
+  padding-right: var(--grid-margin);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Column span utilities */
+.col-1  { grid-column: span 1; }
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-9  { grid-column: span 9; }
+.col-10 { grid-column: span 10; }
+.col-11 { grid-column: span 11; }
+.col-12 { grid-column: span 12; }
+
+/* Column start utilities */
+.col-start-1  { grid-column-start: 1; }
+.col-start-2  { grid-column-start: 2; }
+.col-start-3  { grid-column-start: 3; }
+.col-start-4  { grid-column-start: 4; }
+.col-start-5  { grid-column-start: 5; }
+.col-start-6  { grid-column-start: 6; }
+.col-start-7  { grid-column-start: 7; }
+.col-start-8  { grid-column-start: 8; }
+.col-start-9  { grid-column-start: 9; }
+.col-start-10 { grid-column-start: 10; }
+.col-start-11 { grid-column-start: 11; }
+.col-start-12 { grid-column-start: 12; }
+
+/* ============================================
+   Scroll Reveal
+   ============================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s var(--ease-figma), transform 0.6s var(--ease-figma);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   mix-blend-difference text (matches Figma)
+   ============================================ */
+
+.blend-text {
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+/**
+ * Homepage: optional hover spans in `HomeSection` are hidden ≥1024px where
+ * scroll-linked overlays apply. Mobile ≤767px: `MobileHomeCenterLabels`; desktop grid:
+ * `DesktopHomeCenterLabels` (+ shared logic in MobileHomeCenterLabels.tsx).
+ */
+.jw-site [data-home-project-caption] {
+  color: #000000 !important;
+  mix-blend-mode: difference !important;
+}
+
+/* ============================================
+   Responsive Breakpoints
+   ============================================ */
+
+@media (max-width: 1439px) {
+  :root {
+    --grid-columns: 12;
+  }
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --grid-columns: 8;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --grid-columns: 4;
+  }
+}

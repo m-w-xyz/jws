@@ -1,0 +1,43 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  /* Above splash (450), nav (400), and Inquiries sidecar (500) — page
+     transitions are always the topmost surface during a route change. */
+  z-index: 1000;
+  transform: translateY(100%);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.covering {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.enter {
+  animation: pageTransitionEnter var(--page-transition-duration) var(--ease-figma)
+    forwards;
+}
+
+.exit {
+  animation: pageTransitionExit var(--page-transition-duration) var(--ease-figma)
+    forwards;
+}
+
+@keyframes pageTransitionEnter {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageTransitionExit {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}

@@ -1,0 +1,84 @@
+/**
+ * Homepage desktop (≥1024px): same scroll-linked copy as mobile strip, fixed at
+ * 50vh. Number aligns to `.nav` `.siteTitle`; project title aligns to `.centerLinks` / Works.
+ * `mix-blend-mode: difference` + white fills like `MobileHomeCenterLabels` / `Nav`.
+ */
+
+.strip {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 350;
+  pointer-events: none;
+  background: transparent;
+}
+
+@media (min-width: 1024px) {
+  .strip {
+    display: block;
+    mix-blend-mode: difference;
+  }
+}
+
+.inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50vh;
+  width: 100%;
+  box-sizing: border-box;
+  /* Same horizontal inset as `.nav` so anchors match `.siteTitle` / `.centerLinks`. */
+  padding-left: var(--grid-margin);
+  padding-right: var(--grid-margin);
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.number,
+.title {
+  position: absolute;
+  top: 0;
+  font-family: var(--font-special-gothic), sans-serif;
+  font-size: var(--font-size);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing);
+  line-height: var(--line-height);
+  color: #ffffff;
+  opacity: 1;
+  white-space: nowrap;
+  transition:
+    opacity 0.42s var(--ease-figma),
+    transform 0.42s var(--ease-figma);
+}
+
+.dimmed {
+  opacity: 0;
+}
+
+/* Match `.nav` `.siteTitle` — right edge of col 5. */
+.number {
+  left: calc(
+    50vw
+      - (min(100vw, var(--grid-max-width)) - 2 * var(--grid-margin)
+        - 11 * var(--grid-gutter)) / 12
+      - 1.5 * var(--grid-gutter)
+  );
+  transform: translateX(-100%);
+  text-align: right;
+}
+
+/* Match `.nav` `.centerLinks` — left edge of col 7. */
+.title {
+  left: calc(50vw + var(--grid-gutter) / 2);
+  transform: none;
+  text-align: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .number,
+  .title {
+    transition: none;
+  }
+}

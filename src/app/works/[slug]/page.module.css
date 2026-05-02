@@ -1,0 +1,235 @@
+.page {
+  /* Single source of truth for one column's pixel width — used by .specs
+     (and inherited by descendants like the gallery thumbnails) so any
+     fixed-position element can line up with the actual grid columns
+     instead of approximating with vw math. The project page intentionally
+     ignores --grid-max-width and stretches edge-to-edge (minus the
+     standard --grid-margin), so this calc is based on the full viewport. */
+  --col-width: calc(
+    (100vw - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
+  );
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gutter);
+  /* Full viewport width with just the standard --grid-margin inset on
+     each side. Other pages cap at --grid-max-width and centre, but the
+     project page reads better at the full viewport. */
+  padding: 0 var(--grid-margin);
+  font-size: var(--font-size);
+}
+
+.galleryCol {
+  grid-column: 1 / 7;
+  grid-row: 1;
+  position: relative;
+}
+
+.infoCol {
+  /* Cols 9-12 (four tracks): one column narrower than the Info CV block so the
+     copy measure is tighter; column 8 stays open beside the gallery gap (col 7). */
+  grid-column: 9 / 13;
+  grid-row: 1;
+}
+
+/* Wraps the title, description, and specs. Hangs from the vertical centre
+   of the viewport (margin-top: 50vh) and fills the bottom half (height:
+   50vh), so we can use a flex column to pin the specs to the bottom of
+   the viewport while the title + description hang from 50vh. */
+.infoColInner {
+  margin-top: 50vh;
+  height: 50vh;
+  /* Same 10px breathing room from the bottom edge as the gallery
+     thumbnails — keeps the bottom-most specs row off the very edge. */
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 20px;
+  font-size: var(--font-size);
+}
+
+.orderNumber {
+  flex-shrink: 0;
+  width: calc(var(--col-width) + var(--grid-gutter));
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+.title {
+  color: #fff;
+  mix-blend-mode: difference;
+  font-size: inherit;
+}
+
+.description {
+  margin-top: 0;
+  text-indent: calc(var(--col-width) + var(--grid-gutter));
+  line-height: 1;
+  font-size: var(--font-size);
+  /* Flex column with zero gap so consecutive paragraphs sit flush against
+     each other (no extra space between them). */
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.description p {
+  margin-bottom: 0;
+}
+
+.description p + p {
+  /* Was 14px — paragraphs now butt up against each other with no gap. */
+  margin-top: 0;
+  text-indent: calc(var(--col-width) + var(--grid-gutter));
+}
+
+.specs {
+  /* Last child of the .infoColInner flex column. `margin-top: auto`
+     soaks up all available vertical space, pinning .specs to the bottom
+     of the 50vh wrapper (i.e. the bottom of the viewport, minus the
+     wrapper's 10px bottom padding). Kept in-flow so the per-line
+     mix-blend-mode: difference on .specLabel / .specValue still blends
+     against the actual page backdrop. */
+  margin-top: auto;
+  /* Flex column so the rows space themselves with `gap` instead of each
+     row carrying its own margin-bottom. With margin-bottom there's an
+     unwanted 5px gap *after* the last row pushing it off the bottom of
+     this container; gap only lives between siblings, so the last row's
+     bottom edge sits flush with .specs's bottom. */
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.specRow {
+  display: flex;
+  align-items: baseline;
+  font-size: var(--font-size);
+  line-height: 1;
+}
+
+.specLabel {
+  flex-shrink: 0;
+  width: calc(var(--col-width) + var(--grid-gutter));
+  color: #fff;
+  mix-blend-mode: difference;
+  opacity: 0.4;
+}
+
+.specValue {
+  color: #fff;
+  mix-blend-mode: difference;
+  font-size: inherit;
+}
+
+@media (max-width: 1023px) {
+  .page {
+    grid-template-columns: repeat(8, 1fr);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .galleryCol {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .infoCol {
+    grid-column: 1 / -1;
+    padding-top: 80px;
+    width: 100%;
+  }
+
+  /* Below the desktop breakpoint everything collapses into a normal
+     top-to-bottom flow, so the inner wrapper drops its 50vh anchor and
+     fixed height, and .specs gets its original 80px gap above it. */
+  .infoColInner {
+    margin-top: 0;
+    height: auto;
+    padding-bottom: 0;
+    display: block;
+  }
+
+  .specs {
+    margin-top: 80px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Match MobileInfoPanel `.intro p` line rhythm (1.12 vs body `--line-height`). */
+  .header {
+    line-height: 1.12;
+  }
+
+  .description {
+    text-indent: 80px;
+    line-height: 1.12;
+  }
+
+  .description p {
+    line-height: 1.12;
+  }
+
+  .description p + p {
+    text-indent: 80px;
+  }
+
+  .specRow {
+    line-height: 1.12;
+  }
+
+  .orderNumber,
+  .specLabel {
+    width: 80px;
+  }
+}
+
+/* ---- Mobile-only adjacent project links (pinned toward viewport bottom) ---- */
+.projectAdjacentNav {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .projectAdjacentNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--grid-gutter);
+    width: 100%;
+    margin-top: auto;
+    padding-top: 48px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    flex-shrink: 0;
+    mix-blend-mode: difference;
+  }
+
+  .projectAdjacentNavNextOnly {
+    justify-content: flex-end;
+  }
+
+  .projectAdjacentNavPrevOnly {
+    justify-content: flex-start;
+  }
+
+  .projectAdjacentLink {
+    flex: 0 1 auto;
+    max-width: calc(50% - var(--grid-gutter) / 2);
+    font-size: var(--font-size);
+    color: #ffffff;
+    font-family: var(--font-special-gothic), sans-serif;
+    font-weight: 500;
+    letter-spacing: var(--letter-spacing);
+    line-height: var(--line-height);
+  }
+
+  .projectAdjacentNavNextOnly .projectAdjacentLink,
+  .projectAdjacentNavPrevOnly .projectAdjacentLink {
+    max-width: 100%;
+  }
+}

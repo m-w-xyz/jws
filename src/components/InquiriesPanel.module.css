@@ -1,0 +1,85 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  /* Above nav (400) so the Inquiries sidecar sits over every other site
+     surface. The page-transition overlay sits even higher so navigations
+     still cover it. */
+  z-index: 500;
+  pointer-events: none;
+}
+
+.overlay.open {
+  pointer-events: auto;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background var(--page-transition-duration) var(--ease-figma);
+}
+
+.overlay.open .backdrop {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 478px;
+  height: 100%;
+  background-color: var(--color-bg);
+  transform: translateX(100%);
+  transition: transform var(--page-transition-duration) var(--ease-figma);
+  display: flex;
+  flex-direction: column;
+  padding: var(--grid-margin);
+}
+
+.overlay.open .panel {
+  transform: translateX(0);
+}
+
+.closeBtn {
+  align-self: flex-end;
+  padding: 0;
+  font-size: var(--font-size);
+  line-height: 1;
+  white-space: nowrap;
+  color: #fff;
+  mix-blend-mode: difference;
+  /* Nav Inquiries sits in a vertically centered flex row (10px top padding);
+     this nudges the label up to match that cap height. */
+  margin-top: -3px;
+}
+
+.contactInfo {
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 110px;
+  font-size: var(--font-size);
+}
+
+.contactLine {
+  display: block;
+  color: #fff;
+  mix-blend-mode: difference;
+  font-size: inherit;
+  line-height: 1;
+}
+
+/* "Blank line" between blocks — matches the Info page spacing. */
+.contactGap {
+  margin-top: 1.4em;
+}
+
+@media (max-width: 767px) {
+  .panel {
+    width: 100%;
+  }
+
+  .contactInfo {
+    padding-left: var(--grid-margin);
+  }
+}

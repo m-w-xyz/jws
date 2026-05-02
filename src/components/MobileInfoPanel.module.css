@@ -1,0 +1,290 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  /* Match Inquiries panel; page transitions (1000) still sit above. */
+  z-index: 500;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  /* Inactive shell z=500 stacks above mobile captions (~350); Info tap (390) / nav (400); closed = pointer-events none. */
+  .overlay {
+    display: block;
+  }
+
+  .overlay.open {
+    z-index: 530;
+  }
+}
+
+.overlay.open {
+  pointer-events: auto;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background var(--page-transition-duration) var(--ease-figma);
+}
+
+.overlay.open .backdrop {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100dvh;
+  height: 100svh;
+  background-color: var(--color-bg);
+  transform: translateX(100%);
+  transition: transform var(--page-transition-duration) var(--ease-figma);
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay.open .panel {
+  transform: translateX(0);
+}
+
+.closeBtn {
+  position: absolute;
+  /* Matches `.infoTap` stack so Close reads like it replaced “Info”. */
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  right: max(10px, env(safe-area-inset-right, 0px));
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  font-size: var(--font-size);
+  font-family: var(--font-special-gothic), sans-serif;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing);
+  color: var(--color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  opacity: 0.4;
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  /* Top inset only for safe area; main offset lives on `.grid` (33vh). */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: 0;
+}
+
+.themeBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 80px;
+  line-height: 1;
+  padding: 0 max(10px, env(safe-area-inset-left, 0px))
+    calc(10px + env(safe-area-inset-bottom, 0px))
+    max(10px, env(safe-area-inset-right, 0px));
+}
+
+.themeToggle {
+  flex-shrink: 0;
+  text-align: left;
+  font-family: var(--font-special-gothic), sans-serif;
+  font-weight: 500;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  line-height: 1;
+  color: var(--color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.themeToggle:hover {
+  opacity: 0.4;
+}
+
+.themeBarInstagram {
+  flex-shrink: 0;
+  font-family: var(--font-special-gothic), sans-serif;
+  font-weight: 500;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  line-height: 1;
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.themeBarInstagram:hover {
+  opacity: 0.4;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--grid-gutter);
+  padding: 33vh max(10px, env(safe-area-inset-left, 0px)) 0
+    max(10px, env(safe-area-inset-right, 0px));
+  width: 100%;
+  max-width: min(100vw, var(--grid-max-width));
+  margin: 0 auto;
+  box-sizing: border-box;
+  /* One column track in this 4×10px gutter grid (margins handled on padding above). */
+  --panel-col-count: 4;
+  --col-w: calc(
+    (100% - (var(--panel-col-count) - 1) * var(--grid-gutter)) /
+      var(--panel-col-count)
+  );
+  /* Intro + CV headings align with column 2 (after year column + gutter). */
+  --text-indent-grid: calc(var(--col-w) + var(--grid-gutter));
+  font-family: var(--font-special-gothic), sans-serif;
+  font-weight: 500;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  line-height: var(--line-height);
+  color: var(--color-text);
+}
+
+.section {
+  grid-column: 1 / -1;
+  margin-bottom: 80px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.intro {
+  line-height: var(--line-height);
+  box-sizing: border-box;
+}
+
+.intro p {
+  margin: 0;
+  text-indent: var(--text-indent-grid);
+  /* Slightly tighter than page `--line-height` (~1.22 on mobile). */
+  line-height: 1.12;
+}
+
+.intro p + p {
+  margin-top: 0;
+}
+
+.intro a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.contactBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.contactLine {
+  display: block;
+  line-height: 1.2;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+a.contactLine:hover {
+  opacity: 0.4;
+}
+
+.contactGap {
+  margin-top: 1.4em;
+}
+
+.portrait {
+  position: relative;
+  width: 100%;
+  grid-column: 1 / -1;
+  aspect-ratio: 348 / 467;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.portrait img {
+  object-fit: cover;
+}
+
+.cvSection {
+  grid-column: 1 / -1;
+  margin-bottom: 80px;
+}
+
+.cvSection:last-child {
+  margin-bottom: 0;
+}
+
+.cvSectionTitle {
+  margin-bottom: 20px;
+  padding-left: var(--text-indent-grid);
+  box-sizing: border-box;
+  font-size: var(--font-size);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.cvEntry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--grid-gutter);
+  line-height: 1.2;
+  font-size: var(--font-size);
+}
+
+.cvYear {
+  flex-shrink: 0;
+  width: var(--col-w);
+  color: var(--color-text);
+  opacity: 0.45;
+}
+
+.cvMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cvName {
+  color: var(--color-text);
+}
+
+.cvNameLink {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cvNameLink:hover {
+    text-decoration: none;
+    opacity: 0.4;
+  }
+}
+
+.cvEntry + .cvEntry {
+  margin-top: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .panel {
+    transition: none;
+  }
+}

@@ -1,0 +1,265 @@
+.page {
+  min-height: 100vh;
+  /* Scrollable CV/portrait grid hangs from mid-viewport (`.portraitAnchor`/`50vh`).
+     Fixed contact top aligns with this datum — see `.contactInner`. */
+  padding-top: 50vh;
+  padding-bottom: 80px;
+  font-size: var(--font-size);
+}
+
+.layout {
+  /* Full viewport width (minus horizontal margins), same column formula as the
+     project page and fixed `.contactInner`, so the grid aligns edge-to-edge. */
+  --col-width: calc(
+    (100vw - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
+  );
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gutter);
+  padding: 0 var(--grid-margin);
+}
+
+/* Contact info — cols 1-2.
+   Fixed in place so it never scrolls with the page. The grid still
+   reserves the same columns; .contactCol is positioned over them
+   relative to the viewport. */
+.contactCol {
+  grid-column: 1 / 3;
+}
+
+.contactCol > .contactInner {
+  position: fixed;
+  /* Top edge in line with `.page` padding and right-column copy (grid starts at 50vh). */
+  top: 50vh;
+  left: var(--grid-margin);
+  width: calc(2 * var(--col-width) + var(--grid-gutter));
+  display: flex;
+  flex-direction: column;
+  /* Blend the whole contact block as a single layer (same approach as
+     .nav and .meta). position:fixed creates its own stacking context, so
+     per-line blending would otherwise isolate against transparent. */
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+.contactLine {
+  display: block;
+  font-size: var(--font-size);
+  line-height: 1;
+}
+
+/* "Blank line" between blocks — equivalent to one empty text row at
+   line-height 1, plus a touch of extra breathing room so it reads as a
+   real paragraph break rather than just tight line spacing. */
+.contactGap {
+  margin-top: 1.4em;
+}
+
+/* Portrait — cols 3-5.
+   Uses a sticky zero-height anchor inside the grid cell so the portrait
+   inherits the grid column's true pixel width (avoiding the scrollbar
+   discrepancy that comes with 100vw-based calc()) and centres its own
+   body on the 50vh line via translateY(-50%). */
+.portraitCol {
+  grid-column: 3 / 6;
+}
+
+.portraitAnchor {
+  position: sticky;
+  top: 50vh;
+  width: calc(100% + var(--grid-gutter));
+}
+
+.portrait {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  aspect-ratio: 348 / 467;
+  overflow: hidden;
+  cursor: default;
+}
+
+.portrait img {
+  object-fit: cover;
+  transition: filter 0.55s ease;
+}
+
+/* Grayscale by default; colour fades in on hover (pointer devices only). */
+@media (hover: hover) and (pointer: fine) {
+  .portrait img {
+    filter: grayscale(1);
+  }
+
+  .portrait:hover img {
+    filter: grayscale(0);
+  }
+}
+
+/* Bio + CV — cols 8-12 through to the layout's right padding (line 13).
+   Each `<p>`: first-line indent col+gutter, padding-left aligns wrap lines with `.cvMain`. */
+.cvCol {
+  grid-column: 8 / 13;
+}
+
+.bio {
+  padding-left: calc(var(--col-width) + var(--grid-gutter));
+  line-height: 1;
+  margin-bottom: 80px;
+  font-size: var(--font-size);
+}
+
+.bio p {
+  margin: 0;
+  line-height: 1;
+  text-indent: calc(var(--col-width) + var(--grid-gutter));
+}
+
+.bio p + p {
+  margin-top: 0;
+}
+
+/* CV sections */
+.cvSection {
+  margin-bottom: 80px;
+}
+
+.cvSectionTitle {
+  text-indent: calc(var(--col-width) + var(--grid-gutter));
+  margin-bottom: 20px;
+  font-size: var(--font-size);
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+.cvEntry {
+  display: flex;
+  align-items: flex-start;
+  line-height: 1;
+  font-size: var(--font-size);
+}
+
+.cvYear {
+  flex-shrink: 0;
+  width: calc(var(--col-width) + var(--grid-gutter));
+  color: #fff;
+  mix-blend-mode: difference;
+  opacity: 0.4;
+}
+
+.cvMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cvName {
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+.cvNameLink {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cvNameLink:hover {
+    text-decoration: none;
+    opacity: 0.4;
+  }
+}
+
+.cvEntry + .cvEntry {
+  margin-top: 2px;
+}
+
+@media (max-width: 1023px) {
+  /* Below 1024px the layout collapses into a normal top-down flow —
+     the portrait rejoins flow at the top of the page, contact sits
+     below it, then the CV. No more viewport-centred pinning. */
+  .page {
+    padding-top: 215px;
+  }
+
+  .layout {
+    max-width: none;
+    margin-inline: 0;
+    width: 100%;
+    --col-width: calc(
+      (100vw - 2 * var(--grid-margin) - 11 * var(--grid-gutter)) / 12
+    );
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .contactCol {
+    grid-column: 1 / -1;
+    margin-bottom: 40px;
+    order: 2;
+  }
+
+  .contactCol > .contactInner {
+    position: static;
+    width: auto;
+    top: auto;
+    left: auto;
+  }
+
+  .portraitCol {
+    grid-column: 1 / 5;
+    order: 1;
+  }
+
+  .portraitAnchor {
+    position: static;
+    top: auto;
+    width: 100%;
+  }
+
+  .portrait {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    transform: none;
+  }
+
+  .cvCol {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+}
+
+@media (max-width: 767px) {
+  .page {
+    padding-top: 120px;
+  }
+
+  .layout {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .portraitCol {
+    grid-column: 1 / -1;
+  }
+
+  .cvYear {
+    width: 80px;
+  }
+
+  .bio {
+    padding-left: 80px;
+  }
+
+  .bio p {
+    text-indent: 80px;
+  }
+
+  .cvSectionTitle {
+    text-indent: 80px;
+  }
+}
