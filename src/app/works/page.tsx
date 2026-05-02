@@ -1,6 +1,6 @@
 import { client, urlFor, isSanityConfigured } from "@/lib/sanity";
 import { WORKS_PAGE_QUERY } from "@/lib/queries";
-import { normalizeHexColour } from "@/lib/get-transition-colours";
+import { normalizeHexColour } from "@/lib/hex-format";
 import WorksMobileGate from "@/components/WorksMobileGate";
 import ProjectCard from "@/components/ProjectCard";
 import styles from "./page.module.css";

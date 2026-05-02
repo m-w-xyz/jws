@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import { client, isSanityConfigured } from "@/lib/sanity";
-import { getTransitionColours, invertHexColourRgb } from "@/lib/get-transition-colours";
+import { getTransitionColours } from "@/lib/get-transition-colours";
+import { invertHexColourRgb } from "@/lib/hex-format";
 import { SPECS_CONTACT_EMAIL } from "@/lib/specs-contact-email";
 import { PROJECT_QUERY, PROJECT_SLUGS_QUERY } from "@/lib/queries";
 import ProjectGallery from "@/components/ProjectGallery";

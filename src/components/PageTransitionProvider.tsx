@@ -16,11 +16,8 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import styles from "./PageTransitionOverlay.module.css";
-import {
-  invertHexColourRgb,
-  normalizeHexColour,
-  type TransitionColours,
-} from "@/lib/get-transition-colours";
+import type { TransitionColours } from "@/lib/get-transition-colours";
+import { invertHexColourRgb, normalizeHexColour } from "@/lib/hex-format";
 
 function projectSlugFromPath(path: string): string | null {
   try {

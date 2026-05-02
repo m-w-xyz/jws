@@ -1,7 +1,7 @@
 import { client, urlFor, isSanityConfigured } from "@/lib/sanity";
 import { HOME_PAGE_QUERY } from "@/lib/queries";
 import { getSiteSettings } from "@/lib/get-site-settings";
-import { normalizeHexColour } from "@/lib/get-transition-colours";
+import { normalizeHexColour } from "@/lib/hex-format";
 import HomeClient from "./HomeClient";
 
 type RawProject = {

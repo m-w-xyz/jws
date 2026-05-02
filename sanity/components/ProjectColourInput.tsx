@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PatchEvent, set, type StringInputProps, unset } from "sanity";
 
-import { normalizeHexColour } from "../../src/lib/get-transition-colours";
+import { normalizeHexColour } from "../../src/lib/hex-format";
 
 /** `#rgb` → `#rrggbb` for `<input type="color">`. */
 function expandToSixDigit(hex: string): string {

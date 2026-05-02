@@ -2,7 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 import { ProjectSlugInput } from "../components/ProjectSlugInput";
 import { ProjectColourInput } from "../components/ProjectColourInput";
-import { normalizeHexColour } from "../../src/lib/get-transition-colours";
+import { normalizeHexColour } from "../../src/lib/hex-format";
 import { SPECS_CONTACT_EMAIL } from "../../src/lib/specs-contact-email";
 
 export const projectType = defineType({

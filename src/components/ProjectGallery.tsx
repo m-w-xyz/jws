@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { normalizeHexColour } from "@/lib/get-transition-colours";
+import { normalizeHexColour } from "@/lib/hex-format";
 import {
   normalizeGalleryItems,
   type SanityGalleryRow,
