@@ -292,6 +292,51 @@ a.contactLine:hover {
   margin-top: 2px;
 }
 
+/* Override global .jw-site blend-mode styles for all text elements in the panel */
+.panel p,
+.panel h1,
+.panel h2,
+.panel h3,
+.panel h4,
+.panel h5,
+.panel h6,
+.panel a,
+.panel span,
+.panel button,
+.panel div {
+  color: #000000;
+  color: var(--color-text) !important;
+  mix-blend-mode: normal !important;
+}
+
+[data-theme="dark"] .panel p,
+[data-theme="dark"] .panel h1,
+[data-theme="dark"] .panel h2,
+[data-theme="dark"] .panel h3,
+[data-theme="dark"] .panel h4,
+[data-theme="dark"] .panel h5,
+[data-theme="dark"] .panel h6,
+[data-theme="dark"] .panel a,
+[data-theme="dark"] .panel span,
+[data-theme="dark"] .panel button,
+[data-theme="dark"] .panel div {
+  color: #f2f0ed !important;
+}
+
+.intro p,
+.intro a,
+.intro span {
+  color: #000000;
+  color: var(--color-text) !important;
+  mix-blend-mode: normal !important;
+}
+
+[data-theme="dark"] .intro p,
+[data-theme="dark"] .intro a,
+[data-theme="dark"] .intro span {
+  color: #f2f0ed !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .backdrop,
   .panel {

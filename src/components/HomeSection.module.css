@@ -185,4 +185,11 @@
     justify-content: center;
     min-height: 100dvh;
   }
+
+  /*
+   * Add spacing between homepage images on mobile.
+   */
+  .section:not(:last-of-type) {
+    margin-bottom: 160px;
+  }
 }
