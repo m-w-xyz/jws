@@ -225,9 +225,6 @@ a.contactLine:hover {
   overflow: hidden;
   background: rgba(0, 0, 0, 0.06);
   mix-blend-mode: normal;
-  /* Optimize for iOS rendering */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
 }
 
 .portrait img {
