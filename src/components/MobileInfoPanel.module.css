@@ -7,6 +7,7 @@
 }
 
 @media (max-width: 767px) {
+  /* Inactive shell z=500 stacks above mobile captions (~350); Info tap (390) / nav (400); closed = pointer-events none. */
   .overlay {
     display: block;
   }
@@ -31,23 +32,21 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* The panel IS the scroll container — no nested overflow.
-   iOS WebKit cannot scroll inside a child of a transformed element. */
 .panel {
   position: fixed;
   top: 0;
   right: 0;
-  bottom: 0;
-  left: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
   background-color: var(--color-bg);
   transform: translate3d(100%, 0, 0);
   -webkit-transform: translate3d(100%, 0, 0);
   transition: transform var(--page-transition-duration) var(--ease-figma);
   -webkit-transition: -webkit-transform var(--page-transition-duration) var(--ease-figma);
-  overflow-y: scroll;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
 }
 
 .overlay.open .panel {
@@ -56,10 +55,11 @@
 }
 
 .closeBtn {
-  position: fixed;
+  position: absolute;
+  /* Matches `.infoTap` stack so Close reads like it replaced “Info”. */
   top: calc(10px + env(safe-area-inset-top, 0px));
   right: max(10px, env(safe-area-inset-right, 0px));
-  z-index: 600;
+  z-index: 1;
   margin: 0;
   padding: 0;
   font-size: var(--font-size);
@@ -75,6 +75,18 @@
 
 .closeBtn:hover {
   opacity: 0.4;
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  /* Top inset only for safe area; main offset lives on `.grid` (33vh). */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  overscroll-behavior-y: contain;
 }
 
 .themeBar {
@@ -136,11 +148,13 @@
   max-width: min(100vw, var(--grid-max-width));
   margin: 0 auto;
   box-sizing: border-box;
+  /* One column track in this 4×10px gutter grid (margins handled on padding above). */
   --panel-col-count: 4;
   --col-w: calc(
     (100% - (var(--panel-col-count) - 1) * var(--grid-gutter)) /
       var(--panel-col-count)
   );
+  /* Intro + CV headings align with column 2 (after year column + gutter). */
   --text-indent-grid: calc(var(--col-w) + var(--grid-gutter));
   font-family: var(--font-special-gothic), sans-serif;
   font-weight: 500;
@@ -168,6 +182,7 @@
 .intro p {
   margin: 0;
   text-indent: var(--text-indent-grid);
+  /* Slightly tighter than page `--line-height` (~1.22 on mobile). */
   line-height: 1.12;
 }
 
@@ -281,7 +296,7 @@ a.contactLine:hover {
   margin-top: 2px;
 }
 
-/* Override global .jw-site blend-mode styles for all elements in the panel */
+/* Override global .jw-site blend-mode styles for all text elements in the panel */
 .panel p,
 .panel h1,
 .panel h2,
@@ -298,17 +313,17 @@ a.contactLine:hover {
   mix-blend-mode: normal !important;
 }
 
-:global([data-theme="dark"]) .panel p,
-:global([data-theme="dark"]) .panel h1,
-:global([data-theme="dark"]) .panel h2,
-:global([data-theme="dark"]) .panel h3,
-:global([data-theme="dark"]) .panel h4,
-:global([data-theme="dark"]) .panel h5,
-:global([data-theme="dark"]) .panel h6,
-:global([data-theme="dark"]) .panel a,
-:global([data-theme="dark"]) .panel span,
-:global([data-theme="dark"]) .panel button,
-:global([data-theme="dark"]) .panel div {
+[data-theme="dark"] .panel p,
+[data-theme="dark"] .panel h1,
+[data-theme="dark"] .panel h2,
+[data-theme="dark"] .panel h3,
+[data-theme="dark"] .panel h4,
+[data-theme="dark"] .panel h5,
+[data-theme="dark"] .panel h6,
+[data-theme="dark"] .panel a,
+[data-theme="dark"] .panel span,
+[data-theme="dark"] .panel button,
+[data-theme="dark"] .panel div {
   color: #f2f0ed !important;
 }
 
@@ -320,9 +335,9 @@ a.contactLine:hover {
   mix-blend-mode: normal !important;
 }
 
-:global([data-theme="dark"]) .intro p,
-:global([data-theme="dark"]) .intro a,
-:global([data-theme="dark"]) .intro span {
+[data-theme="dark"] .intro p,
+[data-theme="dark"] .intro a,
+[data-theme="dark"] .intro span {
   color: #f2f0ed !important;
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import BioParagraphs from "@/components/BioWithLinks";
 import { CvSectionBlock, type AboutCvClassNames } from "@/components/AboutCvBlocks";
@@ -43,6 +43,7 @@ export default function MobileInfoPanel({
   about,
 }: MobileInfoPanelProps) {
   const { theme, setTheme } = useTheme();
+  const panelRef = useRef<HTMLDivElement>(null);
   const savedScrollY = useRef(0);
 
   useEffect(() => {
@@ -64,23 +65,42 @@ export default function MobileInfoPanel({
     };
   }, [isOpen]);
 
+  const onTransitionEnd = useCallback((e: React.TransitionEvent) => {
+    if (e.target !== panelRef.current || e.propertyName !== "transform") return;
+    const el = panelRef.current;
+    if (!el) return;
+    if (isOpen) {
+      el.style.transform = "none";
+      el.style.webkitTransform = "none";
+    }
+  }, [isOpen]);
+
+  const handleClose = useCallback(() => {
+    const el = panelRef.current;
+    if (el) {
+      el.style.transform = "";
+      el.style.webkitTransform = "";
+    }
+    requestAnimationFrame(() => onClose());
+  }, [onClose]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     if (isOpen) window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const viewportNoLongerMobile = () => {
-      if (!mq.matches && isOpen) onClose();
+      if (!mq.matches && isOpen) handleClose();
     };
     viewportNoLongerMobile();
     mq.addEventListener("change", viewportNoLongerMobile);
     return () => mq.removeEventListener("change", viewportNoLongerMobile);
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   const bioParagraphs = about?.bio?.split("\n").filter(Boolean) ?? [];
   const instagramUsername = settings.instagramHandle.replace("@", "");
@@ -92,111 +112,115 @@ export default function MobileInfoPanel({
 
   return (
     <div className={`${styles.overlay} ${isOpen ? styles.open : ""}`}>
-      <div className={styles.backdrop} onClick={onClose} aria-hidden />
+      <div className={styles.backdrop} onClick={handleClose} aria-hidden />
       <div
+        ref={panelRef}
         id="mobile-info-panel"
         className={styles.panel}
         role="dialog"
         aria-modal="true"
         aria-hidden={!isOpen}
+        onTransitionEnd={onTransitionEnd}
         {...(!isOpen ? { inert: true as const } : {})}
       >
-        <button type="button" className={styles.closeBtn} onClick={onClose}>
+        <button type="button" className={styles.closeBtn} onClick={handleClose}>
           Close
         </button>
 
-        <div className={styles.grid}>
-          {bioParagraphs.length > 0 && (
-            <section className={`${styles.section} ${styles.intro}`}>
-              <BioParagraphs
-                paragraphs={bioParagraphs}
-                email={settings.email}
-                instagramUsername={instagramUsername}
-              />
-            </section>
-          )}
+        <div className={styles.scroll}>
+          <div className={styles.grid}>
+            {bioParagraphs.length > 0 && (
+              <section className={`${styles.section} ${styles.intro}`}>
+                <BioParagraphs
+                  paragraphs={bioParagraphs}
+                  email={settings.email}
+                  instagramUsername={instagramUsername}
+                />
+              </section>
+            )}
 
-          <section className={`${styles.section} ${styles.contactBlock}`}>
-            <a href={`mailto:${settings.email}`} className={styles.contactLine}>
-              {settings.email}
-            </a>
-            <a
-              href={`tel:${settings.phone.replace(/\s/g, "")}`}
-              className={styles.contactLine}
+            <section className={`${styles.section} ${styles.contactBlock}`}>
+              <a href={`mailto:${settings.email}`} className={styles.contactLine}>
+                {settings.email}
+              </a>
+              <a
+                href={`tel:${settings.phone.replace(/\s/g, "")}`}
+                className={styles.contactLine}
+              >
+                {settings.phone}
+              </a>
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.contactLine} ${styles.contactGap}`}
+              >
+                ig {settings.instagramHandle}
+              </a>
+              <span className={`${styles.contactLine} ${styles.contactGap}`}>
+                {settings.location}
+              </span>
+            </section>
+
+            {about?.portraitSrc ? (
+              <section className={styles.section}>
+                <div className={styles.portrait}>
+                  <Image
+                    src={about.portraitSrc}
+                    alt="James Walsh"
+                    fill
+                    sizes="100vw"
+                    placeholder={about.portraitBlur ? "blur" : "empty"}
+                    blurDataURL={about.portraitBlur ?? undefined}
+                  />
+                </div>
+              </section>
+            ) : null}
+
+            <CvSectionBlock
+              title="Exhibitions"
+              items={about?.exhibitions ?? []}
+              cls={cvCls}
+            />
+            <CvSectionBlock
+              title="Competitions"
+              items={about?.competitions ?? []}
+              cls={cvCls}
+            />
+            <CvSectionBlock
+              title="Residencies"
+              items={about?.residencies ?? []}
+              cls={cvCls}
+            />
+            <CvSectionBlock
+              title="Publications"
+              items={about?.publications ?? []}
+              cls={cvCls}
+            />
+          </div>
+
+          <div className={styles.themeBar}>
+            <button
+              type="button"
+              className={styles.themeToggle}
+              onClick={toggleTheme}
+              aria-label={
+                theme === "dark"
+                  ? `Switch to ${footerLightLabel}`
+                  : `Switch to ${footerDarkLabel}`
+              }
             >
-              {settings.phone}
-            </a>
+              {theme === "dark" ? footerLightLabel : footerDarkLabel}
+            </button>
             <a
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${styles.contactLine} ${styles.contactGap}`}
+              className={styles.themeBarInstagram}
             >
-              ig {settings.instagramHandle}
+              {settings.instagramHandle}
             </a>
-            <span className={`${styles.contactLine} ${styles.contactGap}`}>
-              {settings.location}
-            </span>
-          </section>
-
-          {about?.portraitSrc ? (
-            <section className={styles.section}>
-              <div className={styles.portrait}>
-                <Image
-                  src={about.portraitSrc}
-                  alt="James Walsh"
-                  fill
-                  sizes="100vw"
-                  placeholder={about.portraitBlur ? "blur" : "empty"}
-                  blurDataURL={about.portraitBlur ?? undefined}
-                />
-              </div>
-            </section>
-          ) : null}
-
-          <CvSectionBlock
-            title="Exhibitions"
-            items={about?.exhibitions ?? []}
-            cls={cvCls}
-          />
-          <CvSectionBlock
-            title="Competitions"
-            items={about?.competitions ?? []}
-            cls={cvCls}
-          />
-          <CvSectionBlock
-            title="Residencies"
-            items={about?.residencies ?? []}
-            cls={cvCls}
-          />
-          <CvSectionBlock
-            title="Publications"
-            items={about?.publications ?? []}
-            cls={cvCls}
-          />
-        </div>
-
-        <div className={styles.themeBar}>
-          <button
-            type="button"
-            className={styles.themeToggle}
-            onClick={toggleTheme}
-            aria-label={
-              theme === "dark"
-                ? `Switch to ${footerLightLabel}`
-                : `Switch to ${footerDarkLabel}`
-            }
-          >
-            {theme === "dark" ? footerLightLabel : footerDarkLabel}
-          </button>
-          <a
-            href={instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.themeBarInstagram}
-          >
-            {settings.instagramHandle}
-          </a>
+          </div>
         </div>
       </div>
     </div>
