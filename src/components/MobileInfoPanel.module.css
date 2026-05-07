@@ -5,6 +5,9 @@
   /* Match Inquiries panel; page transitions (1000) still sit above. */
   z-index: 500;
   pointer-events: none;
+  /* Prevent iOS scroll issues */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
 }
 
 @media (max-width: 767px) {
@@ -23,10 +26,14 @@
 }
 
 .backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0);
   transition: background var(--page-transition-duration) var(--ease-figma);
+  /* Hardware acceleration for smooth fade on iOS */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: background;
 }
 
 .overlay.open .backdrop {
@@ -34,11 +41,12 @@
 }
 
 .panel {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   width: 100%;
   max-width: 100%;
+  height: 100vh;
   height: 100dvh;
   height: 100svh;
   background-color: var(--color-bg);
@@ -46,10 +54,17 @@
   transition: transform var(--page-transition-duration) var(--ease-figma);
   display: flex;
   flex-direction: column;
+  /* Enable hardware acceleration on iOS */
+  -webkit-transform: translateX(100%);
+  -webkit-transition: -webkit-transform var(--page-transition-duration) var(--ease-figma);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .overlay.open .panel {
   transform: translateX(0);
+  -webkit-transform: translateX(0);
 }
 
 .closeBtn {
@@ -78,11 +93,16 @@
 .scroll {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
   -webkit-overflow-scrolling: touch;
   /* Top inset only for safe area; main offset lives on `.grid` (33vh). */
   padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: 0;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  /* Improve scroll performance on iOS */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  overscroll-behavior: contain;
 }
 
 .themeBar {
@@ -221,6 +241,9 @@ a.contactLine:hover {
   overflow: hidden;
   background: rgba(0, 0, 0, 0.06);
   mix-blend-mode: normal;
+  /* Optimize for iOS rendering */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .portrait img {
