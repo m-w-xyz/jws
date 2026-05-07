@@ -10,16 +10,7 @@
 
 @media (max-width: 767px) {
   .mobileViewportGroup {
-    display: flex;
-    flex-direction: column;
-    /*
-     * First project: vertical centre of the 4:5 image sits at 50vh (scroll top).
-     * Full-bleed width ⇒ image height = 125vw; half-height = 62.5vw.
-     */
-    padding-top: calc(50vh - 62.5vw);
-    padding-bottom: 20vh;
-    gap: 20vh;
-    box-sizing: border-box;
+    display: block;
     position: relative;
     z-index: 0;
     isolation: isolate;

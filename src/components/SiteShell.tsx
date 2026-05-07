@@ -143,9 +143,6 @@ function SiteShellInner({
   const handleSplashComplete = useCallback(() => {
     writeMobileSplashSeen();
     setSplashState(null);
-    if (typeof window !== "undefined") {
-      window.scrollTo(0, 0);
-    }
   }, []);
 
   const triggerSplashReplay = useCallback(() => {
@@ -173,15 +170,8 @@ function SiteShellInner({
   const handleSplashCovered = useCallback(() => {
     const href = pendingNavRef.current;
     pendingNavRef.current = null;
-    if (href) {
-      router.push(href);
-      return;
-    }
-    /* Replay on `/`: reset scroll while the splash fully masks the page. */
-    if (pathname === "/" && typeof window !== "undefined") {
-      window.scrollTo(0, 0);
-    }
-  }, [router, pathname]);
+    if (href) router.push(href);
+  }, [router]);
 
   useLayoutEffect(() => {
     setMobileInfoOpen(false);

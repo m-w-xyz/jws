@@ -166,14 +166,19 @@
    * Mobile homepage: portrait-style primary image, full bleed width × 4:5.
    * (Overrides the 1023px 60vh height for compact viewports.)
    */
-  .section {
-    /* Wrap image height only; even vertical rhythm comes from parent `gap` (HomeClient). */
-    min-height: 0;
-  }
-
   .primaryImage {
     width: 100%;
     height: auto;
     aspect-ratio: 4 / 5;
+  }
+
+  /*
+   * Homepage: vertically centre the first project image against the viewport.
+   */
+  .section:first-of-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100dvh;
   }
 }
