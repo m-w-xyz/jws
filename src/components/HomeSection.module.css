@@ -192,4 +192,14 @@
   .section:not(:last-of-type) {
     margin-bottom: 160px;
   }
+
+  /*
+   * Homepage: vertically centre the first project image against the viewport.
+   */
+  .section:first-of-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100dvh;
+  }
 }
