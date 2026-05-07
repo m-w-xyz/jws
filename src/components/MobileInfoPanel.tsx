@@ -45,11 +45,20 @@ export default function MobileInfoPanel({
   const { theme, setTheme } = useTheme();
   useEffect(() => {
     if (!isOpen) return;
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
+    const scrollY = window.scrollY;
+    const body = document.body;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.overflow = "hidden";
     return () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.overflow = "";
+      window.scrollTo(0, scrollY);
     };
   }, [isOpen]);
 
