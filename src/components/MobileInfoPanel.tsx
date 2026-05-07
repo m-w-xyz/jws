@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import BioParagraphs from "@/components/BioWithLinks";
 import { CvSectionBlock, type AboutCvClassNames } from "@/components/AboutCvBlocks";
@@ -43,12 +43,15 @@ export default function MobileInfoPanel({
   about,
 }: MobileInfoPanelProps) {
   const { theme, setTheme } = useTheme();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const savedScrollY = useRef(0);
+
   useEffect(() => {
     if (!isOpen) return;
-    const scrollY = window.scrollY;
+    savedScrollY.current = window.scrollY;
     const body = document.body;
     body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
+    body.style.top = `-${savedScrollY.current}px`;
     body.style.left = "0";
     body.style.right = "0";
     body.style.overflow = "hidden";
@@ -58,27 +61,46 @@ export default function MobileInfoPanel({
       body.style.left = "";
       body.style.right = "";
       body.style.overflow = "";
-      window.scrollTo(0, scrollY);
+      window.scrollTo(0, savedScrollY.current);
     };
   }, [isOpen]);
 
+  const onTransitionEnd = useCallback((e: React.TransitionEvent) => {
+    if (e.target !== panelRef.current || e.propertyName !== "transform") return;
+    const el = panelRef.current;
+    if (!el) return;
+    if (isOpen) {
+      el.style.transform = "none";
+      el.style.webkitTransform = "none";
+    }
+  }, [isOpen]);
+
+  const handleClose = useCallback(() => {
+    const el = panelRef.current;
+    if (el) {
+      el.style.transform = "";
+      el.style.webkitTransform = "";
+    }
+    requestAnimationFrame(() => onClose());
+  }, [onClose]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     if (isOpen) window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const viewportNoLongerMobile = () => {
-      if (!mq.matches && isOpen) onClose();
+      if (!mq.matches && isOpen) handleClose();
     };
     viewportNoLongerMobile();
     mq.addEventListener("change", viewportNoLongerMobile);
     return () => mq.removeEventListener("change", viewportNoLongerMobile);
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   const bioParagraphs = about?.bio?.split("\n").filter(Boolean) ?? [];
   const instagramUsername = settings.instagramHandle.replace("@", "");
@@ -90,16 +112,18 @@ export default function MobileInfoPanel({
 
   return (
     <div className={`${styles.overlay} ${isOpen ? styles.open : ""}`}>
-      <div className={styles.backdrop} onClick={onClose} aria-hidden />
+      <div className={styles.backdrop} onClick={handleClose} aria-hidden />
       <div
+        ref={panelRef}
         id="mobile-info-panel"
         className={styles.panel}
         role="dialog"
         aria-modal="true"
         aria-hidden={!isOpen}
+        onTransitionEnd={onTransitionEnd}
         {...(!isOpen ? { inert: true as const } : {})}
       >
-        <button type="button" className={styles.closeBtn} onClick={onClose}>
+        <button type="button" className={styles.closeBtn} onClick={handleClose}>
           Close
         </button>
 
