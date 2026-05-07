@@ -11,9 +11,11 @@
   bottom: 0;
   /* Half viewport each side; left and right primaries meet at 50vw. */
   width: 50vw;
+  max-width: 50vw;
   overflow: hidden;
   display: block;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .primaryImage.static {
@@ -42,10 +44,12 @@
 
 .primaryLeft {
   left: 0;
+  right: auto;
 }
 
 .primaryRight {
   right: 0;
+  left: auto;
 }
 
 /* ---- Secondary image (2 cols wide, 4:5 ratio) ---- */

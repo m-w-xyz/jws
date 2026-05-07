@@ -64,7 +64,8 @@
   font-family: var(--font-special-gothic), sans-serif;
   font-weight: 500;
   letter-spacing: var(--letter-spacing);
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
   background: none;
   border: none;
   cursor: pointer;
@@ -104,7 +105,8 @@
   font-size: var(--font-size);
   letter-spacing: var(--letter-spacing);
   line-height: 1;
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
   background: none;
   border: none;
   cursor: pointer;
@@ -122,7 +124,8 @@
   font-size: var(--font-size);
   letter-spacing: var(--letter-spacing);
   line-height: 1;
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -154,7 +157,8 @@
   font-size: var(--font-size);
   letter-spacing: var(--letter-spacing);
   line-height: var(--line-height);
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
 }
 
 .section {
@@ -196,7 +200,8 @@
 .contactLine {
   display: block;
   line-height: 1.2;
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
   text-decoration: none;
 }
 
@@ -236,7 +241,8 @@ a.contactLine:hover {
   box-sizing: border-box;
   font-size: var(--font-size);
   font-weight: 500;
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
 }
 
 .cvEntry {
@@ -250,7 +256,8 @@ a.contactLine:hover {
 .cvYear {
   flex-shrink: 0;
   width: var(--col-w);
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
   opacity: 0.45;
 }
 
@@ -263,7 +270,8 @@ a.contactLine:hover {
 }
 
 .cvName {
-  color: var(--color-text);
+  color: #ffffff;
+  mix-blend-mode: difference;
 }
 
 .cvNameLink {
